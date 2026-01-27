@@ -167,32 +167,32 @@ export default function RoomPage({ params }: { params: { id: string } }) {
         
         <div className="flex gap-2">
           <div className="flex gap-1 text-xs border-r pr-2 mr-2">
-            <button onClick={() => { setUserRole('spectator'); setMockJoinedAt(null); }} className="p-1 hover:bg-gray-50 border rounded">Spec</button>
-            <button onClick={simulateJoinNow} className="p-1 hover:bg-gray-50 border rounded bg-green-50 text-green-700">Join</button>
-            <button onClick={() => { setUserRole('owner'); setMockJoinedAt(null); }} className="p-1 hover:bg-gray-50 border rounded">Own</button>
+            <button data-testid="dev-role-spectator" onClick={() => { setUserRole('spectator'); setMockJoinedAt(null); }} className="p-1 hover:bg-gray-50 border rounded">Spec</button>
+            <button data-testid="dev-role-member" onClick={simulateJoinNow} className="p-1 hover:bg-gray-50 border rounded bg-green-50 text-green-700">Join</button>
+            <button data-testid="dev-role-owner" onClick={() => { setUserRole('owner'); setMockJoinedAt(null); }} className="p-1 hover:bg-gray-50 border rounded">Own</button>
           </div>
           
           {(userRole === 'member' || userRole === 'owner') && (
             <>
               {!myFamiliar ? (
-                <button onClick={registerFamiliar} className="p-2 rounded-full hover:bg-gray-100 text-gray-600 border border-dashed" title="Register AI Familiar">
+                <button data-testid="register-familiar" onClick={registerFamiliar} className="p-2 rounded-full hover:bg-gray-100 text-gray-600 border border-dashed" title="Register AI Familiar">
                   <Bot size={20} />
                 </button>
               ) : (
-                <div className="flex items-center gap-1 px-2 border rounded-full bg-indigo-50 text-indigo-700 cursor-pointer" title={`Your familiar: ${myFamiliar.name}`} onClick={simulateSomeoneElseInvokingMyAi}>
+                <div data-testid="familiar-badge" className="flex items-center gap-1 px-2 border rounded-full bg-indigo-50 text-indigo-700 cursor-pointer" title={`Your familiar: ${myFamiliar.name}`} onClick={simulateSomeoneElseInvokingMyAi}>
                   <Bot size={14} /> <span className="text-xs font-bold">{myFamiliar.name}</span>
                 </div>
               )}
 
               {/* Mock Extension Trigger */}
-              <button onClick={simulateExtensionDrop} className="p-2 rounded-full hover:bg-gray-100 text-gray-600" title="Simulate Extension Capture">
+              <button data-testid="simulate-extension-drop" onClick={simulateExtensionDrop} className="p-2 rounded-full hover:bg-gray-100 text-gray-600" title="Simulate Extension Capture">
                 <Download size={20} />
               </button>
 
-              <button onClick={() => setIsSelectionMode(!isSelectionMode)} className={`p-2 rounded-full transition ${isSelectionMode ? 'bg-blue-100 text-blue-700' : 'hover:bg-gray-100 text-gray-600'}`} title="Select messages">
+              <button data-testid="toggle-selection" onClick={() => setIsSelectionMode(!isSelectionMode)} className={`p-2 rounded-full transition ${isSelectionMode ? 'bg-blue-100 text-blue-700' : 'hover:bg-gray-100 text-gray-600'}`} title="Select messages">
                 <MousePointer2 size={20} />
               </button>
-              <button onClick={() => setIsPocketOpen(!isPocketOpen)} className={`p-2 rounded-full transition ${isPocketOpen ? 'bg-orange-100 text-orange-700' : 'hover:bg-gray-100 text-gray-600'}`} title="Open Pocket">
+              <button data-testid="toggle-pocket" onClick={() => setIsPocketOpen(!isPocketOpen)} className={`p-2 rounded-full transition ${isPocketOpen ? 'bg-orange-100 text-orange-700' : 'hover:bg-gray-100 text-gray-600'}`} title="Open Pocket">
                 <Library size={20} />
               </button>
             </>
@@ -205,14 +205,14 @@ export default function RoomPage({ params }: { params: { id: string } }) {
         <div className="flex-1 flex flex-col min-w-0">
           <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
             {pendingInvocations.length > 0 && (
-              <div className="bg-indigo-50 border border-indigo-200 p-3 rounded-lg mx-4 flex justify-between items-center animate-pulse">
+              <div data-testid="ai-approval-card" className="bg-indigo-50 border border-indigo-200 p-3 rounded-lg mx-4 flex justify-between items-center animate-pulse">
                 <div className="flex items-center gap-2 text-indigo-800 text-sm">
                   <AlertCircle size={16} />
                   <span><strong>{pendingInvocations[0].triggeredBy}</strong> is asking <strong>{pendingInvocations[0].familiarName}</strong> to speak...</span>
                 </div>
                 <div className="flex gap-2">
-                  <button onClick={() => approveInvocation(pendingInvocations[0].id)} className="bg-indigo-600 text-white px-3 py-1 rounded text-xs hover:bg-indigo-700 font-bold">Nod (Allow)</button>
-                  <button onClick={() => rejectInvocation(pendingInvocations[0].id)} className="bg-white border text-gray-600 px-3 py-1 rounded text-xs hover:bg-gray-50">Shake Head</button>
+                  <button data-testid="ai-nod-allow" onClick={() => approveInvocation(pendingInvocations[0].id)} className="bg-indigo-600 text-white px-3 py-1 rounded text-xs hover:bg-indigo-700 font-bold">Nod (Allow)</button>
+                  <button data-testid="ai-shake-head" onClick={() => rejectInvocation(pendingInvocations[0].id)} className="bg-white border text-gray-600 px-3 py-1 rounded text-xs hover:bg-gray-50">Shake Head</button>
                 </div>
               </div>
             )}
@@ -221,7 +221,7 @@ export default function RoomPage({ params }: { params: { id: string } }) {
               <div key={msg.id} className={`flex gap-3 ${msg.isDeleted ? 'opacity-60' : ''}`}>
                 {isSelectionMode && !msg.isDeleted && (
                   <div className="pt-2">
-                    <input type="checkbox" checked={selectedMessageIds.has(msg.id)} onChange={() => toggleSelection(msg.id)} className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500" />
+                    <input data-testid={`select-message-${msg.id}`} type="checkbox" checked={selectedMessageIds.has(msg.id)} onChange={() => toggleSelection(msg.id)} className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500" />
                   </div>
                 )}
                 
@@ -239,7 +239,7 @@ export default function RoomPage({ params }: { params: { id: string } }) {
                   }`}>
                     {msg.content}
                     {!msg.isDeleted && (userRole === 'member' || userRole === 'owner') && !isSelectionMode && (
-                      <button onClick={() => handleDeleteMessage(msg.id)} className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 text-gray-400 hover:text-red-500 transition">
+                      <button data-testid={`delete-message-${msg.id}`} onClick={() => handleDeleteMessage(msg.id)} className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 text-gray-400 hover:text-red-500 transition">
                         <Trash2 size={14} />
                       </button>
                     )}
@@ -250,14 +250,14 @@ export default function RoomPage({ params }: { params: { id: string } }) {
           </div>
           
           {isSelectionMode && selectedMessageIds.size > 0 && (
-            <div className="absolute bottom-20 left-1/2 -translate-x-1/2 bg-white shadow-lg border rounded-full px-4 py-2 flex items-center gap-3 animate-in fade-in slide-in-from-bottom-4 z-30">
+            <div data-testid="selection-toolbar" className="absolute bottom-20 left-1/2 -translate-x-1/2 bg-white shadow-lg border rounded-full px-4 py-2 flex items-center gap-3 animate-in fade-in slide-in-from-bottom-4 z-30">
               <span className="text-sm font-medium">{selectedMessageIds.size} selected</span>
               <div className="h-4 w-px bg-gray-300"></div>
-              <button onClick={createSegment} className="text-orange-600 hover:text-orange-700 text-sm font-bold flex items-center gap-1">
+              <button data-testid="extract-pocket" onClick={createSegment} className="text-orange-600 hover:text-orange-700 text-sm font-bold flex items-center gap-1">
                 <Library size={16} /> Pocket
               </button>
               <div className="h-4 w-px bg-gray-300"></div>
-              <button onClick={invokeAi} className="text-indigo-600 hover:text-indigo-700 text-sm font-bold flex items-center gap-1">
+              <button data-testid="ask-ai" onClick={invokeAi} className="text-indigo-600 hover:text-indigo-700 text-sm font-bold flex items-center gap-1">
                 <Sparkles size={16} /> Ask AI
               </button>
             </div>
@@ -271,18 +271,18 @@ export default function RoomPage({ params }: { params: { id: string } }) {
               </div>
             ) : userRole === 'spectator' ? (
               <div className="text-center">
-                <button onClick={handleRequestJoin} className="bg-blue-600 text-white px-6 py-2 rounded-full font-medium flex items-center gap-2 mx-auto">
+                <button data-testid="request-join" onClick={handleRequestJoin} className="bg-blue-600 text-white px-6 py-2 rounded-full font-medium flex items-center gap-2 mx-auto">
                   <Plus size={16} /> Request to Join
                 </button>
               </div>
             ) : (
-              <div className="text-center text-gray-500 flex justify-center gap-2"><Clock /> Waiting approval...</div>
+              <div data-testid="join-pending" className="text-center text-gray-500 flex justify-center gap-2"><Clock /> Waiting approval...</div>
             )}
           </div>
         </div>
 
         {isPocketOpen && (
-          <div className="w-80 border-l bg-white shadow-xl flex flex-col z-20 absolute inset-y-0 right-0 md:relative">
+          <div data-testid="pocket-sidebar" className="w-80 border-l bg-white shadow-xl flex flex-col z-20 absolute inset-y-0 right-0 md:relative">
             <div className="p-4 border-b flex justify-between items-center bg-orange-50">
               <h2 className="font-bold flex items-center gap-2 text-orange-900"><Library size={18} /> Pocket</h2>
               <button onClick={() => setIsPocketOpen(false)} className="text-orange-900/50 hover:text-orange-900"><X size={18} /></button>
@@ -295,7 +295,7 @@ export default function RoomPage({ params }: { params: { id: string } }) {
                 </div>
               ) : (
                 segments.map(seg => (
-                  <div key={seg.id} className="border rounded-lg p-3 hover:shadow-md transition bg-orange-50/30 border-orange-100">
+                  <div data-testid={`segment-${seg.id}`} key={seg.id} className="border rounded-lg p-3 hover:shadow-md transition bg-orange-50/30 border-orange-100">
                     <div className="font-semibold text-sm mb-1">{seg.name}</div>
                     {seg.contentPreview ? (
                       <div className="text-xs text-gray-600 italic mb-2 border-l-2 border-gray-300 pl-2">{seg.contentPreview}</div>
@@ -304,8 +304,8 @@ export default function RoomPage({ params }: { params: { id: string } }) {
                     )}
                     {seg.source && <div className="text-[10px] text-gray-400 mb-2 uppercase tracking-wide">{seg.source}</div>}
                     <div className="flex gap-2">
-                      <button className="flex-1 bg-white border text-xs py-1 rounded hover:bg-gray-50">View</button>
-                      <button onClick={() => shareSegment(seg.id)} disabled={seg.isShared} className={`flex-1 text-xs py-1 rounded flex items-center justify-center gap-1 ${seg.isShared ? 'bg-green-100 text-green-700 cursor-default' : 'bg-orange-600 text-white hover:bg-orange-700'}`}>
+                      <button data-testid={`segment-view-${seg.id}`} className="flex-1 bg-white border text-xs py-1 rounded hover:bg-gray-50">View</button>
+                      <button data-testid={`segment-share-${seg.id}`} onClick={() => shareSegment(seg.id)} disabled={seg.isShared} className={`flex-1 text-xs py-1 rounded flex items-center justify-center gap-1 ${seg.isShared ? 'bg-green-100 text-green-700 cursor-default' : 'bg-orange-600 text-white hover:bg-orange-700'}`}>
                         {seg.isShared ? <Check size={12}/> : <Share2 size={12}/>} {seg.isShared ? 'Shared' : 'Share'}
                       </button>
                     </div>
