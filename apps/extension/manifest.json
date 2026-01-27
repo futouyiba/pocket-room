@@ -1,0 +1,10 @@
+{
+  "manifest_version": 3,
+  "name": "Pocket Room Capture",
+  "version": "0.1.0",
+  "description": "Capture context for Pocket Room",
+  "permissions": ["activeTab", "scripting"],
+  "action": {
+    "default_popup": "index.html"
+  }
+}
