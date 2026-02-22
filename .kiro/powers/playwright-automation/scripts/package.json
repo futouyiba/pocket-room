@@ -1,0 +1,15 @@
+{
+  "name": "playwright-automation-power",
+  "version": "1.0.0",
+  "description": "Playwright automation helper scripts",
+  "main": "helpers.js",
+  "scripts": {
+    "setup": "npm install && npx playwright install chromium"
+  },
+  "keywords": ["playwright", "automation", "testing"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "playwright": "^1.50.0"
+  }
+}

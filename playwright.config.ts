@@ -7,15 +7,15 @@ export default defineConfig({
     timeout: 10_000,
   },
   use: {
-    baseURL: 'http://127.0.0.1:3000',
+    baseURL: 'http://127.0.0.1:3001',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
   },
   webServer: {
-    command: 'npm run dev -- -p 3000',
+    command: 'npm run dev -- -p 3001',
     cwd: 'apps/web',
-    url: 'http://127.0.0.1:3000',
+    url: 'http://127.0.0.1:3001',
     reuseExistingServer: true,
     timeout: 120_000,
     stdout: 'ignore',

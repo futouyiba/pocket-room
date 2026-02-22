@@ -1,0 +1,76 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Next.js: 调试服务器端",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "npm run dev",
+      "cwd": "${workspaceFolder}/apps/web",
+      "serverReadyAction": {
+        "pattern": "- Local:.+(https?://.+)",
+        "uriFormat": "%s",
+        "action": "debugWithChrome"
+      }
+    },
+    {
+      "name": "Next.js: 调试客户端",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:3000",
+      "webRoot": "${workspaceFolder}/apps/web",
+      "sourceMapPathOverrides": {
+        "webpack://_N_E/*": "${webRoot}/*"
+      }
+    },
+    {
+      "name": "Next.js: 全栈调试",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "npm run dev",
+      "cwd": "${workspaceFolder}/apps/web",
+      "console": "integratedTerminal",
+      "serverReadyAction": {
+        "pattern": "- Local:.+(https?://.+)",
+        "uriFormat": "%s",
+        "action": "openExternally"
+      }
+    },
+    {
+      "name": "运行测试 (当前文件)",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "npm run test -- ${relativeFile}",
+      "cwd": "${workspaceFolder}/apps/web"
+    },
+    {
+      "name": "运行所有测试",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "npm run test",
+      "cwd": "${workspaceFolder}/apps/web"
+    },
+    {
+      "name": "测试 UI 界面",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "npm run test:ui",
+      "cwd": "${workspaceFolder}/apps/web"
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Next.js: 完整调试 (服务器 + 浏览器)",
+      "configurations": [
+        "Next.js: 调试服务器端",
+        "Next.js: 调试客户端"
+      ],
+      "presentation": {
+        "hidden": false,
+        "group": "debug",
+        "order": 1
+      },
+      "stopAll": true
+    }
+  ]
+}
