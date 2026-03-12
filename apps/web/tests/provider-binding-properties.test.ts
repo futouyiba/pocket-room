@@ -47,12 +47,6 @@ const scopesArbitrary = fc.array(
 const validConnectionArbitrary = fc.record({
   id: uuidArbitrary,
   userId: uuidArbitrary,
-/**
- * Generate a connection with future expiration
- */
-const validConnectionArbitrary = fc.record({
-  id: uuidArbitrary,
-  userId: uuidArbitrary,
   provider: providerTypeArbitrary,
   accountId: fc.option(fc.string({ minLength: 1, maxLength: 50 })),
   scopes: scopesArbitrary,

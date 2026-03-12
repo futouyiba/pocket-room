@@ -452,6 +452,9 @@ CREATE POLICY "Owners manage blacklist"
 -- ============================================================================
 
 -- Room Member 可以查看自己加入后的消息
+-- 如果用户已退出且选择删除历史，则无法访问消息
+-- 如果用户已退出且选择保留历史，则可以访问加入期间的消息
+-- 如果消息是 Companion 响应且 visibility = 'private'，则仅 Companion Owner 可见
 CREATE POLICY "Members see messages after join"
   ON public.messages FOR SELECT
   USING (
@@ -460,10 +463,33 @@ CREATE POLICY "Members see messages after join"
       WHERE room_members.room_id = messages.room_id
         AND room_members.user_id = auth.uid()
         AND messages.created_at >= room_members.joined_at
+        AND (
+          -- 仍在 Room 中（未退出）
+          room_members.left_at IS NULL
+          OR
+          -- 已退出但选择保留历史，且消息在加入和退出之间
+          (room_members.keep_history = TRUE AND messages.created_at <= room_members.left_at)
+        )
+    )
+    AND (
+      -- 如果消息是 Companion 响应且设置为 private，则仅 Companion Owner 可见
+      NOT EXISTS (
+        SELECT 1 FROM public.ai_invocations
+        WHERE ai_invocations.response_message_id = messages.id
+          AND ai_invocations.visibility = 'private'
+          AND EXISTS (
+            SELECT 1 FROM public.ai_companions
+            WHERE ai_companions.id = ai_invocations.companion_id
+              AND ai_companions.owner_id != auth.uid()
+          )
+      )
+      OR
+      -- 如果消息不是 Companion 响应，或者是 public 响应，或者用户是 Companion Owner，则可见
+      TRUE
     )
   );
 
--- Room Member 可以发送消息
+-- Room Member 可以发送消息（仅当仍在 Room 中）
 CREATE POLICY "Members can send messages"
   ON public.messages FOR INSERT
   WITH CHECK (
@@ -471,6 +497,7 @@ CREATE POLICY "Members can send messages"
       SELECT 1 FROM public.room_members
       WHERE room_members.room_id = messages.room_id
         AND room_members.user_id = auth.uid()
+        AND room_members.left_at IS NULL  -- 仅当仍在 Room 中
     )
   );
 

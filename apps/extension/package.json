@@ -3,13 +3,16 @@
   "version": "0.1.0",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build"
+    "build": "tsc && vite build && npm run copy-manifest",
+    "copy-manifest": "cp manifest.json dist/ && cp -r public/* dist/ 2>/dev/null || true",
+    "watch": "vite build --watch"
   },
   "dependencies": {
     "react": "^18",
     "react-dom": "^18"
   },
   "devDependencies": {
+    "@types/chrome": "^0.0.268",
     "@vitejs/plugin-react": "^4",
     "typescript": "^5",
     "vite": "^5"

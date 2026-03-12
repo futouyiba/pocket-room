@@ -28,7 +28,8 @@ export function storeOAuthState(state: OAuthState): void {
     
     // Clean up expired states
     const now = Date.now();
-    for (const [key, value] of serverStateStore.entries()) {
+    const entries = Array.from(serverStateStore.entries());
+    for (const [key, value] of entries) {
       if (now - value.createdAt > STATE_EXPIRY_MS) {
         serverStateStore.delete(key);
       }

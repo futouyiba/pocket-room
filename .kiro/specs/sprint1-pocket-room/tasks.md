@@ -290,30 +290,30 @@
 
 ### 7. Room 成员管理
 
-- [-] 7.1 实现成员列表展示
+- [x] 7.1 实现成员列表展示
   - 在 Room 页面中展示成员列表
   - 显示成员头像、名称、在线状态
   - _需求：4.2_
 
-- [~] 7.2 实现退出 Room 功能
+- [x] 7.2 实现退出 Room 功能
   - 创建"退出 Room"按钮
   - 显示确认对话框（保留历史 / 删除历史）
   - 实现退出逻辑：设置 `left_at` 和 `keep_history`
   - _需求：11.1, 11.2, 11.3_
 
-- [~] 7.3 实现退出后的历史访问控制
+- [x] 7.3 实现退出后的历史访问控制
   - 保留历史：消息历史保持可访问
   - 删除历史：消息历史标记为不可访问
   - _需求：11.4, 11.5_
 
-- [~] 7.4 编写成员管理的属性测试
+- [x] 7.4 编写成员管理的属性测试
   - **属性 28：退出保留历史**
   - **属性 29：退出删除历史**
   - **验证需求：11.4, 11.5**
 
 ### 8. Segment 摘取与分享
 
-- [~] 8.1 实现 Segment 创建功能
+- [x] 8.1 实现 Segment 创建功能
   - 在 Room 页面中实现消息选择 UI
   - 创建 `create-segment` Edge Function
   - 创建 Segment 记录和 Segment_Messages 关联记录
@@ -321,70 +321,70 @@
   - 验证所有消息来自同一 Room
   - _需求：12.1, 12.2, 12.3_
 
-- [~] 8.2 实现 Segment 分享到 Room
+- [x] 8.2 实现 Segment 分享到 Room
   - 创建 `share-segment` Edge Function
   - 创建 `message_type = 'segment_share'` 的消息
   - 包含 `shared_segment_id` 引用
   - 创建 SegmentPreview 组件展示预览和链接
   - _需求：12.4_
 
-- [~] 8.3 实现 Segment 私信分享
+- [x] 8.3 实现 Segment 私信分享
   - 在 `share-segment` Edge Function 中处理私信分享
   - 创建 DM 记录（Sprint 1 简化实现）
   - _需求：12.5_
 
-- [~] 8.4 实现 Segment 元数据管理
+- [x] 8.4 实现 Segment 元数据管理
   - 确保 Segment 包含 `created_by`、`room_id`、`created_at` 字段
   - 展示 Segment 元数据（创建者、来源 Room、创建时间）
   - _需求：12.6_
 
-- [~] 8.5 实现 Basket（收集篮）
+- [x] 8.5 实现 Basket（收集篮）
   - 创建 Basket 页面 (`/basket`)
   - 展示草稿 Segment 列表（`is_draft = true`）
   - 实现 Segment 整理和编辑功能
   - 实现从 Basket 分享到 Room 或私信
   - _需求：12.1_
 
-- [~] 8.6 编写 Segment 的属性测试
+- [x] 8.6 编写 Segment 的属性测试
   - **属性 30：Segment 创建保序**
   - **属性 31：Segment 单 Room 限制**
   - **属性 32：Segment 分享创建消息**
   - **属性 33：Segment 元数据完整性**
   - **验证需求：12.1, 12.2, 12.3, 12.4, 12.6**
 
-- [~] 8.7 检查点 - 确保所有测试通过
+- [x] 8.7 检查点 - 确保所有测试通过
   - 确保所有测试通过，如有问题请询问用户
 
 
 ### 9. Companion 注册与管理
 
-- [~] 9.1 实现 Companion 注册功能
+- [x] 9.1 实现 Companion 注册功能
   - 创建 Companion 注册表单 UI（在 Settings 中）
   - 输入：名称、关联的 Provider Connection、模型选择、System Prompt
   - 实现 Companion 创建逻辑
   - 验证 `provider_connection_id` 有效性
   - _需求：13.1, 13.2_
 
-- [~] 9.2 实现 Companion 配置管理
+- [x] 9.2 实现 Companion 配置管理
   - 展示用户的 Companion 列表
   - 实现 Companion 编辑功能（名称、模型、System Prompt、temperature、max_tokens）
   - 实现 Companion 删除功能
   - _需求：13.3, 13.5_
 
-- [~] 9.3 实现 Companion System Prompt 配置
+- [x] 9.3 实现 Companion System Prompt 配置
   - 创建 System Prompt 编辑器
   - 支持多行文本输入
   - 提供 System Prompt 模板示例
   - _需求：13.4_
 
-- [~] 9.4 编写 Companion 注册的属性测试
+- [x] 9.4 编写 Companion 注册的属性测试
   - **属性 34：多 Companion 注册**
   - **属性 35：Companion 需要有效连接**
   - **验证需求：13.1, 13.2**
 
 ### 10. Companion 治理生命周期
 
-- [~] 10.1 实现 Companion 召唤（Summon）
+- [x] 10.1 实现 Companion 召唤（Summon）
   - 在 Room 页面中添加"召唤 Companion"按钮
   - 创建 `summon-companion` Edge Function
   - 创建 `ai_invocation` 记录（status = 'summoned'）
@@ -392,7 +392,7 @@
   - 不触发 API 调用，不消耗 token
   - _需求：14.1_
 
-- [~] 10.2 实现 Companion 请求（Request）
+- [x] 10.2 实现 Companion 请求（Request）
   - 在 Room 页面中添加"请求 Companion 回应"按钮
   - 创建 `request-companion` Edge Function
   - 更新 `ai_invocation` 状态为 'pending_approval'
@@ -401,7 +401,7 @@
   - 不触发 API 调用
   - _需求：14.2, 14.3_
 
-- [~] 10.3 实现 Companion 批准（Approve）
+- [x] 10.3 实现 Companion 批准（Approve）
   - 创建审批请求 UI（通知或队列）
   - 提供两个选项："批准一次"和"始终允许该成员"
   - 创建 `approve-companion-request` Edge Function
@@ -410,14 +410,14 @@
   - 更新 Companion 图标为明亮状态
   - _需求：14.4, 14.6_
 
-- [~] 10.4 实现 Companion 上下文选择
+- [x] 10.4 实现 Companion 上下文选择
   - 在批准后请求 Owner 显式选择上下文
   - 提供消息选择 UI 或 Segment 选择 UI
   - 将选择的上下文关联到 `ai_invocation.context_segment_id`
   - 阻止自动访问完整 Timeline
   - _需求：15.1, 15.2_
 
-- [~] 10.5 实现 Companion 响应（Respond）
+- [x] 10.5 实现 Companion 响应（Respond）
   - 创建 `execute-companion-response` Edge Function
   - 获取 Companion 配置（model, system_prompt, temperature, max_tokens）
   - 获取上下文内容（从 context_segment_id）
@@ -427,26 +427,26 @@
   - 记录 `tokens_used`
   - _需求：14.5_
 
-- [~] 10.6 实现 Companion 响应可见性控制
+- [x] 10.6 实现 Companion 响应可见性控制
   - 在上下文选择时询问 Owner：公开到 Room 或仅私信给自己
   - 如果 `visibility = 'private'`，消息仅对 Owner 可见
   - 如果 `visibility = 'public'`，消息对所有 Room Member 可见
   - _需求：15.3_
 
-- [~] 10.7 实现 Companion 审批豁免
+- [x] 10.7 实现 Companion 审批豁免
   - Owner 触发自己的 Companion：跳过审批，直接执行
   - 白名单成员触发 Companion：跳过审批，直接执行
   - 检查 `companion_whitelist` 表
   - _需求：14.7, 14.8_
 
-- [~] 10.8 实现 Companion API 调用错误处理
+- [x] 10.8 实现 Companion API 调用错误处理
   - 捕获 API 调用失败
   - 更新 `ai_invocation` 状态为 'failed'
   - 记录 `error_message`
   - 向触发者和 Owner 显示错误信息
   - _需求：14.9_
 
-- [~] 10.9 编写 Companion 治理的属性测试
+- [x] 10.9 编写 Companion 治理的属性测试
   - **属性 36：Companion 召唤创建 Invocation**
   - **属性 37：Companion 请求等待审批**
   - **属性 38：Companion 批准触发响应**
@@ -455,63 +455,63 @@
   - **属性 41：Companion 响应可见性控制**
   - **验证需求：14.1, 14.2, 14.3, 14.5, 14.7, 14.8, 15.2, 15.3**
 
-- [~] 10.10 检查点 - 确保所有测试通过
+- [x] 10.10 检查点 - 确保所有测试通过
   - 确保所有测试通过，如有问题请询问用户
 
 
 ### 11. 浏览器扩展内容捕获
 
-- [~] 11.1 设置浏览器扩展项目结构
+- [x] 11.1 设置浏览器扩展项目结构
   - 配置 Vite + Manifest V3
   - 创建 content script、background service worker、popup
   - 配置权限（activeTab, storage）
   - _需求：16.1_
 
-- [~] 11.2 实现网页内容选择和捕获
+- [x] 11.2 实现网页内容选择和捕获
   - 在 content script 中监听文本选择事件
   - 显示"发送到 Pocket Room"按钮
   - 捕获选中文本和来源 URL
   - _需求：16.1, 16.3_
 
-- [~] 11.3 实现与 Web App 的通信
+- [x] 11.3 实现与 Web App 的通信
   - 检查用户登录状态
   - 如果未登录，提示用户先登录
   - 发送捕获内容到 Web App
   - _需求：16.4_
 
-- [~] 11.4 实现草稿 Segment 创建
+- [x] 11.4 实现草稿 Segment 创建
   - 在 Web App 的 Basket 中创建草稿 Segment
   - 设置 `is_draft = true`
   - 记录 `source_url`
   - 显示成功确认提示
   - _需求：16.2, 16.5_
 
-- [~] 11.5 编写浏览器扩展的属性测试
+- [x] 11.5 编写浏览器扩展的属性测试
   - **属性 42：浏览器扩展创建草稿 Segment**
   - **验证需求：16.2**
 
 ### 12. UI 组件与样式
 
-- [~] 12.1 实现核心 UI 组件
+- [x] 12.1 实现核心 UI 组件
   - MessageItem 组件（Markdown 渲染、代码高亮、图片显示、Tombstone）
   - CompanionCard 组件（显示 Companion 状态，灰色/明亮图标）
   - JoinRequestItem 组件（审批操作按钮）
   - SegmentPreview 组件（Segment 预览和链接）
   - _需求：8.2, 8.3, 8.4, 8.5, 14.1, 14.6_
 
-- [~] 12.2 实现页面布局和导航
+- [x] 12.2 实现页面布局和导航
   - 创建主布局组件（Header、Sidebar、Content）
   - 实现导航菜单（Room List、Basket、Settings）
   - 实现响应式设计（移动端适配）
   - _需求：全部需求的 UI 基础_
 
-- [~] 12.3 实现 shadcn/ui 组件集成
+- [x] 12.3 实现 shadcn/ui 组件集成
   - 安装和配置 shadcn/ui
   - 集成常用组件（Button、Input、Dialog、Dropdown、Toast）
   - 配置 Tailwind CSS 主题
   - _需求：全部需求的 UI 基础_
 
-- [~] 12.4 实现实时状态指示器
+- [x] 12.4 实现实时状态指示器
   - 连接状态指示器（Realtime 连接/断开）
   - 在线状态指示器（成员在线/离线）
   - 加载状态指示器（API 调用中）
@@ -519,40 +519,40 @@
 
 ### 13. 错误处理与用户体验
 
-- [~] 13.1 实现统一的错误处理机制
+- [x] 13.1 实现统一的错误处理机制
   - 创建 ErrorResponse 接口
   - 实现错误代码和消息映射
   - 实现错误日志记录（不记录敏感信息）
   - _需求：1.8, 2.5, 14.9_
 
-- [~] 13.2 实现用户友好的错误提示
+- [x] 13.2 实现用户友好的错误提示
   - 认证错误：显示重试选项，自动重定向
   - 业务逻辑错误：显示明确的错误消息和操作建议
   - 网络错误：显示连接状态，自动重连
   - 验证错误：显示具体的字段错误信息
   - _需求：1.8, 8.6_
 
-- [~] 13.3 实现降级策略
+- [x] 13.3 实现降级策略
   - Realtime 不可用时降级为轮询模式（每 5 秒查询一次）
   - 图片上传失败时允许纯文本消息发送
   - Markdown 渲染失败时显示原始文本
   - _需求：8.6_
 
-- [~] 13.4 实现自动重试机制
+- [x] 13.4 实现自动重试机制
   - Token 刷新失败：最多重试 3 次，指数退避
   - Realtime 连接断开：自动重连，最多 10 次
   - _需求：2.4, 8.6_
 
 ### 14. 测试与质量保证
 
-- [~] 14.1 配置测试框架
+- [x] 14.1 配置测试框架
   - 配置 Vitest 用于单元测试
   - 配置 fast-check 用于属性测试
   - 配置 Playwright 用于 E2E 测试
   - 配置 Supabase Test Helpers
   - _需求：全部需求的测试基础_
 
-- [~] 14.2 编写单元测试
+- [x] 14.2 编写单元测试
   - 认证模块单元测试（OAuth 流程、Session 管理）
   - Provider Binding 单元测试（PKCE、Token 管理）
   - Room 模块单元测试（创建、加入、审批）
@@ -561,14 +561,14 @@
   - Companion 模块单元测试（注册、召唤、请求、批准、响应）
   - _需求：全部需求的单元测试覆盖_
 
-- [~] 14.3 编写所有属性测试（已在各模块中标记）
+- [x] 14.3 编写所有属性测试（已在各模块中标记）
   - 确保所有 46 个属性都有对应的属性测试
   - 每个属性测试至少运行 100 次迭代
   - 使用 fast-check 的 arbitrary 生成器
   - 使用注释标记对应的设计属性和需求
   - _需求：全部需求的属性测试覆盖_
 
-- [~] 14.4 编写 E2E 测试
+- [x] 14.4 编写 E2E 测试
   - 用户登录流程 E2E 测试
   - Room 创建和加入流程 E2E 测试
   - 消息发送和接收流程 E2E 测试
@@ -576,14 +576,14 @@
   - Segment 创建和分享流程 E2E 测试
   - _需求：全部需求的 E2E 测试覆盖_
 
-- [~] 14.5 编写 RLS 策略集成测试
+- [x] 14.5 编写 RLS 策略集成测试
   - 使用 Supabase Test Database
   - 测试所有表的 RLS 策略
   - 测试未授权访问尝试
   - 测试跨用户资源访问尝试
   - _需求：17.1, 17.2, 17.3, 17.4, 17.5_
 
-- [~] 14.6 最终检查点 - 确保所有测试通过
+- [x] 14.6 最终检查点 - 确保所有测试通过
   - 运行所有单元测试
   - 运行所有属性测试（100 次迭代）
   - 运行所有 E2E 测试
@@ -593,26 +593,26 @@
 
 ### 15. 部署与文档
 
-- [~] 15.1 配置生产环境
+- [x] 15.1 配置生产环境
   - 配置 Vercel 部署（Web App）
   - 配置 Supabase 生产数据库
   - 配置环境变量（生产环境）
   - 配置 OAuth Provider 生产回调 URL
   - _需求：全部需求的生产环境基础_
 
-- [~] 15.2 准备浏览器扩展发布
+- [x] 15.2 准备浏览器扩展发布
   - 构建浏览器扩展生产版本
   - 准备 Chrome Web Store 发布材料（图标、截图、描述）
   - 提交到 Chrome Web Store 审核
   - _需求：16.1, 16.2, 16.3, 16.4, 16.5_
 
-- [~] 15.3 编写用户文档
+- [x] 15.3 编写用户文档
   - 用户使用指南（登录、创建 Room、发送消息、使用 Companion）
   - Companion 配置指南（绑定 Provider、注册 Companion、设置 System Prompt）
   - 浏览器扩展使用指南
   - 常见问题解答（FAQ）
 
-- [~] 15.4 编写开发者文档
+- [x] 15.4 编写开发者文档
   - API 文档（Edge Functions 接口）
   - 数据库 Schema 文档
   - RLS 策略文档

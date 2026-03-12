@@ -179,6 +179,11 @@ describe('Message Deletion Properties', () => {
             created_at: fc.date({ min: new Date('2020-01-01'), max: new Date() }),
           }),
           (message) => {
+            // Skip invalid dates
+            if (isNaN(message.created_at.getTime())) {
+              return true;
+            }
+
             const deletionTime = new Date();
             const deletedMessage = {
               ...message,

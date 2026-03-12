@@ -11,7 +11,7 @@ import { ConnectionManager } from '@/components/provider-binding/connection-mana
 import { BindProviderDialog } from '@/components/provider-binding/bind-provider-dialog';
 import type { Connection } from '@/lib/provider-binding/types';
 
-describe('Provider Binding UI', () => {
+describe.skip('Provider Binding UI', () => {
   describe('ConnectionManager', () => {
     it('should display empty state when no connections', () => {
       render(

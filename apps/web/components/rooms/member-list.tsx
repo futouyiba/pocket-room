@@ -36,10 +36,19 @@ export function MemberList({ roomId, currentUserId }: MemberListProps) {
       try {
         setIsLoading(true);
 
-        // Fetch room members
+        // Fetch room members with user data from auth.users
         const { data: roomMembers, error: membersError } = await supabase
           .from('room_members')
-          .select('user_id, role, joined_at')
+          .select(`
+            user_id,
+            role,
+            joined_at,
+            user:auth.users!room_members_user_id_fkey(
+              id,
+              email,
+              raw_user_meta_data
+            )
+          `)
           .eq('room_id', roomId)
           .is('left_at', null) // Only active members
           .order('joined_at', { ascending: true });
@@ -54,22 +63,24 @@ export function MemberList({ roomId, currentUserId }: MemberListProps) {
           return;
         }
 
-        // Get user IDs
-        const userIds = roomMembers.map(m => m.user_id);
-
-        // Fetch user profiles from auth.users metadata
-        // Note: In production, you'd have a separate profiles table
-        // For now, we'll use a simple approach with user IDs
-        const membersWithProfiles: Member[] = roomMembers.map(member => ({
-          id: member.user_id,
-          userId: member.user_id,
-          displayName: member.user_id === currentUserId 
+        // Transform data to Member interface
+        const membersWithProfiles: Member[] = roomMembers.map((member: any) => {
+          const userData = member.user;
+          const displayName = member.user_id === currentUserId 
             ? 'You' 
-            : `User ${member.user_id.slice(0, 8)}`,
-          role: member.role as 'owner' | 'member',
-          isOnline: false, // TODO: Implement presence tracking
-          joinedAt: member.joined_at,
-        }));
+            : userData?.raw_user_meta_data?.display_name || userData?.email || `User ${member.user_id.slice(0, 8)}`;
+          const avatarUrl = userData?.raw_user_meta_data?.avatar_url;
+
+          return {
+            id: member.user_id,
+            userId: member.user_id,
+            displayName,
+            avatarUrl,
+            role: member.role as 'owner' | 'member',
+            isOnline: false, // TODO: Implement presence tracking with Supabase Realtime
+            joinedAt: member.joined_at,
+          };
+        });
 
         setMembers(membersWithProfiles);
       } catch (error) {

@@ -39,7 +39,8 @@ describe('MessageItem Component', () => {
       
       render(<MessageItem message={deletedMessage} isOwn={false} />);
       
-      expect(screen.getByText('This message was deleted')).toBeInTheDocument();
+      // The UI shows Chinese text: "此消息已被删除"
+      expect(screen.getByText('此消息已被删除')).toBeInTheDocument();
     });
 
     it('should render AI message with bot icon', () => {

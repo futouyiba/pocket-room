@@ -198,8 +198,19 @@ function getJoinBehavior(
  * Calculate silenced until timestamp
  */
 function calculateSilencedUntil(currentTime: Date, durationHours: number): Date {
+  // Validate inputs to prevent NaN
+  if (!currentTime || isNaN(currentTime.getTime()) || !isFinite(durationHours)) {
+    throw new Error('Invalid date or duration')
+  }
+  
   const silencedUntil = new Date(currentTime)
   silencedUntil.setHours(silencedUntil.getHours() + durationHours)
+  
+  // Validate output
+  if (isNaN(silencedUntil.getTime())) {
+    throw new Error('Calculated date is invalid')
+  }
+  
   return silencedUntil
 }
 
@@ -519,6 +530,11 @@ describe('Room Join Logic Properties (Pure Logic)', () => {
   it('Property: Silence duration is calculated correctly', () => {
     fc.assert(
       fc.property(timestampArb, silenceDurationHoursArb, (currentTime, durationHours) => {
+        // Skip invalid dates
+        if (!currentTime || isNaN(currentTime.getTime())) {
+          return true
+        }
+        
         const silencedUntil = calculateSilencedUntil(currentTime, durationHours)
 
         const diffMs = silencedUntil.getTime() - currentTime.getTime()

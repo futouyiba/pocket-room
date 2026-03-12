@@ -68,8 +68,8 @@ export function generateState(): string {
  * @returns base64url encoded string
  */
 function base64UrlEncode(buffer: Uint8Array): string {
-  // Convert to base64
-  const base64 = btoa(String.fromCharCode(...buffer));
+  // Convert to base64 using Array.from to avoid spread operator issues
+  const base64 = btoa(String.fromCharCode(...Array.from(buffer)));
   
   // Convert to base64url
   return base64

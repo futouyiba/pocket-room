@@ -66,6 +66,18 @@ const DialogDescription = React.forwardRef<
 ))
 DialogDescription.displayName = "DialogDescription"
 
+const DialogContent = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+  <div
+    ref={ref}
+    className={cn("relative bg-background p-6 rounded-lg", className)}
+    {...props}
+  />
+))
+DialogContent.displayName = "DialogContent"
+
 const DialogFooter = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
@@ -78,4 +90,4 @@ const DialogFooter = React.forwardRef<
 ))
 DialogFooter.displayName = "DialogFooter"
 
-export { Dialog, DialogHeader, DialogTitle, DialogDescription, DialogFooter }
+export { Dialog, DialogHeader, DialogTitle, DialogDescription, DialogContent, DialogFooter }

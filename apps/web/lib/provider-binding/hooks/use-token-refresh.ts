@@ -8,8 +8,23 @@
 'use client';
 
 import { useEffect, useCallback, useState } from 'react';
-import { refreshTokenIfNeeded, TokenRefreshError } from '../token-refresh';
+import { refreshConnection as refreshConnectionAPI } from '../connection-api';
 import { Connection } from '../types';
+
+/**
+ * Token refresh error
+ */
+export class TokenRefreshError extends Error {
+  constructor(
+    message: string,
+    public readonly connectionId: string,
+    public readonly provider: string,
+    public readonly shouldReauthorize: boolean = true
+  ) {
+    super(message);
+    this.name = 'TokenRefreshError';
+  }
+}
 
 /**
  * Refresh status for a connection
@@ -79,37 +94,19 @@ export function useTokenRefresh(
     });
     
     try {
-      const connection = await refreshTokenIfNeeded(connectionId);
+      const connection = await refreshConnectionAPI(connectionId);
       
-      if (connection) {
-        setStatuses(prev => {
-          const next = new Map(prev);
-          next.set(connectionId, {
-            connectionId,
-            status: 'success',
-            lastRefreshed: new Date(),
-          });
-          return next;
+      setStatuses(prev => {
+        const next = new Map(prev);
+        next.set(connectionId, {
+          connectionId,
+          status: 'success',
+          lastRefreshed: new Date(),
         });
-        
-        onRefreshSuccess?.(connectionId, connection);
-      } else {
-        // Connection not found
-        setStatuses(prev => {
-          const next = new Map(prev);
-          next.set(connectionId, {
-            connectionId,
-            status: 'error',
-            error: new TokenRefreshError(
-              'Connection not found',
-              connectionId,
-              'unknown',
-              false
-            ),
-          });
-          return next;
-        });
-      }
+        return next;
+      });
+      
+      onRefreshSuccess?.(connectionId, connection);
     } catch (error) {
       const refreshError = error instanceof TokenRefreshError
         ? error

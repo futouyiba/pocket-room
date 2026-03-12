@@ -9,7 +9,7 @@
  */
 
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import { fc } from 'fast-check';
+import fc from 'fast-check';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
 // ============================================================================

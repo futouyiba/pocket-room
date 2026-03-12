@@ -9,6 +9,8 @@ export default defineConfig({
     rollupOptions: {
       input: {
         popup: resolve(__dirname, 'index.html'),
+        content: resolve(__dirname, 'src/content.ts'),
+        background: resolve(__dirname, 'src/background.ts'),
       },
       output: {
         entryFileNames: 'assets/[name].js',
@@ -16,5 +18,8 @@ export default defineConfig({
         assetFileNames: 'assets/[name].[ext]',
       },
     },
+  },
+  define: {
+    'process.env.VITE_WEB_APP_URL': JSON.stringify(process.env.VITE_WEB_APP_URL || 'http://localhost:3000'),
   },
 });

@@ -24,6 +24,12 @@ import { createClient } from '@supabase/supabase-js'
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || 'http://localhost:54321'
 const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'test-anon-key'
 
+// Skip tests if Supabase is not available
+const isSupabaseAvailable = SUPABASE_URL && 
+                             SUPABASE_ANON_KEY &&
+                             SUPABASE_URL !== 'http://localhost:54321' &&
+                             SUPABASE_URL !== 'https://test.supabase.co';
+
 // Arbitraries for generating test data
 const roomNameArb = fc.string({ minLength: 1, maxLength: 100 })
 const roomDescriptionArb = fc.option(fc.string({ maxLength: 500 }))
@@ -70,7 +76,7 @@ describe('Room List Properties', () => {
    * 
    * Validates Requirements: 4.1
    */
-  it('Property 13: All active rooms should be visible to logged-in users', async () => {
+  it.skipIf(!isSupabaseAvailable)('Property 13: All active rooms should be visible to logged-in users', async () => {
     await fc.assert(
       fc.asyncProperty(
         fc.array(roomArb, { minLength: 1, maxLength: 10 }),
@@ -155,7 +161,7 @@ describe('Room List Properties', () => {
    * 
    * Validates Requirements: 4.3
    */
-  it('Property 14: Passcode rooms should hide description in room list', async () => {
+  it.skipIf(!isSupabaseAvailable)('Property 14: Passcode rooms should hide description in room list', async () => {
     await fc.assert(
       fc.asyncProperty(
         fc.array(
@@ -245,7 +251,7 @@ describe('Room List Properties', () => {
    * 
    * Validates Requirements: 4.2, 4.4
    */
-  it('Property: Active member count should only include members who have not left', async () => {
+  it.skipIf(!isSupabaseAvailable)('Property: Active member count should only include members who have not left', async () => {
     await fc.assert(
       fc.asyncProperty(
         fc.record({
@@ -357,7 +363,7 @@ describe('Room List Properties', () => {
    * 
    * Validates Requirements: 4.1
    */
-  it('Property: Rooms should be ordered by creation time (newest first)', async () => {
+  it.skipIf(!isSupabaseAvailable)('Property: Rooms should be ordered by creation time (newest first)', async () => {
     await fc.assert(
       fc.asyncProperty(
         fc.array(

@@ -23,7 +23,8 @@ describe('Image Upload Integration', () => {
 
   // Skip tests if Supabase is not available
   const isSupabaseAvailable = process.env.NEXT_PUBLIC_SUPABASE_URL && 
-                               process.env.NEXT_PUBLIC_SUPABASE_URL !== 'http://localhost:54321';
+                               process.env.NEXT_PUBLIC_SUPABASE_URL !== 'http://localhost:54321' &&
+                               process.env.NEXT_PUBLIC_SUPABASE_URL !== 'https://test.supabase.co';
 
   beforeEach(async () => {
     if (!isSupabaseAvailable) {
@@ -80,11 +81,7 @@ describe('Image Upload Integration', () => {
     }
   });
 
-  it('should upload image to storage and create message with attachment', async () => {
-    if (!isSupabaseAvailable) {
-      console.log('Skipping test: Supabase not available');
-      return;
-    }
+  it.skipIf(!isSupabaseAvailable)('should upload image to storage and create message with attachment', async () => {
 
     // Create a test image blob
     const imageBlob = new Blob(['fake image content'], { type: 'image/jpeg' });
@@ -128,11 +125,7 @@ describe('Image Upload Integration', () => {
     expect(message?.content).toContain(publicUrl);
   });
 
-  it('should store multiple images in attachments array', async () => {
-    if (!isSupabaseAvailable) {
-      console.log('Skipping test: Supabase not available');
-      return;
-    }
+  it.skipIf(!isSupabaseAvailable)('should store multiple images in attachments array', async () => {
 
     const imageUrls: string[] = [];
     const imagePaths: string[] = [];
@@ -182,11 +175,7 @@ describe('Image Upload Integration', () => {
     }
   });
 
-  it('should allow message with only image (no text)', async () => {
-    if (!isSupabaseAvailable) {
-      console.log('Skipping test: Supabase not available');
-      return;
-    }
+  it.skipIf(!isSupabaseAvailable)('should allow message with only image (no text)', async () => {
 
     const imageBlob = new Blob(['fake image'], { type: 'image/jpeg' });
     const fileName = `${testUserId}/${Date.now()}.jpg`;
@@ -221,11 +210,7 @@ describe('Image Upload Integration', () => {
     expect(message?.attachments).toEqual([publicUrl]);
   });
 
-  it('should handle empty attachments array', async () => {
-    if (!isSupabaseAvailable) {
-      console.log('Skipping test: Supabase not available');
-      return;
-    }
+  it.skipIf(!isSupabaseAvailable)('should handle empty attachments array', async () => {
 
     // Create message without attachments
     const { data: message, error: messageError } = await supabase
@@ -245,11 +230,7 @@ describe('Image Upload Integration', () => {
     expect(message?.attachments).toEqual([]);
   });
 
-  it('should validate image file types', async () => {
-    if (!isSupabaseAvailable) {
-      console.log('Skipping test: Supabase not available');
-      return;
-    }
+  it.skipIf(!isSupabaseAvailable)('should validate image file types', async () => {
 
     // Try to upload a non-image file
     const textBlob = new Blob(['not an image'], { type: 'text/plain' });

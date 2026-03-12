@@ -15,7 +15,7 @@
  * Get encryption key from environment variable
  * Key must be 32 bytes (256 bits) encoded in base64
  */
-function getEncryptionKey(): CryptoKey {
+async function getEncryptionKey(): Promise<CryptoKey> {
   const keyBase64 = process.env.TOKEN_ENCRYPTION_KEY;
   
   if (!keyBase64) {

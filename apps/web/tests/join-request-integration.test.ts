@@ -16,6 +16,12 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
 
+// Skip tests if Supabase is not available
+const isSupabaseAvailable = supabaseUrl && 
+                             supabaseAnonKey &&
+                             supabaseUrl !== 'http://localhost:54321' &&
+                             supabaseUrl !== 'https://test.supabase.co';
+
 describe('Join Request Integration Tests', () => {
   let supabase: ReturnType<typeof createClient>;
   let testRoomId: string;
@@ -24,8 +30,7 @@ describe('Join Request Integration Tests', () => {
   let requestId: string;
 
   beforeEach(async () => {
-    if (!supabaseUrl || !supabaseAnonKey) {
-      console.warn('Skipping integration tests: Supabase credentials not provided');
+    if (!isSupabaseAvailable) {
       return;
     }
 
@@ -82,11 +87,7 @@ describe('Join Request Integration Tests', () => {
     }
   });
 
-  it('should approve join request and add user as member', async () => {
-    if (!supabase) {
-      console.warn('Skipping test: Supabase not initialized');
-      return;
-    }
+  it.skipIf(!isSupabaseAvailable)('should approve join request and add user as member', async () => {
 
     // Approve the request
     const response = await fetch('/api/rooms/handle-join-request', {
@@ -127,11 +128,7 @@ describe('Join Request Integration Tests', () => {
     expect(request?.handled_at).toBeDefined();
   });
 
-  it('should reject join request without adding user', async () => {
-    if (!supabase) {
-      console.warn('Skipping test: Supabase not initialized');
-      return;
-    }
+  it.skipIf(!isSupabaseAvailable)('should reject join request without adding user', async () => {
 
     // Reject the request
     const response = await fetch('/api/rooms/handle-join-request', {
@@ -167,11 +164,7 @@ describe('Join Request Integration Tests', () => {
     expect(request?.status).toBe('rejected');
   });
 
-  it('should block user and add to blacklist', async () => {
-    if (!supabase) {
-      console.warn('Skipping test: Supabase not initialized');
-      return;
-    }
+  it.skipIf(!isSupabaseAvailable)('should block user and add to blacklist', async () => {
 
     // Block the user
     const response = await fetch('/api/rooms/handle-join-request', {
@@ -224,11 +217,7 @@ describe('Join Request Integration Tests', () => {
     expect(joinError.error).toContain('封禁');
   });
 
-  it('should silence user and set cooldown period', async () => {
-    if (!supabase) {
-      console.warn('Skipping test: Supabase not initialized');
-      return;
-    }
+  it.skipIf(!isSupabaseAvailable)('should silence user and set cooldown period', async () => {
 
     const silenceDurationHours = 24;
 
@@ -282,22 +271,14 @@ describe('Join Request Integration Tests', () => {
     expect(joinError.error).toContain('冷却期');
   });
 
-  it('should reject if non-owner tries to handle request', async () => {
-    if (!supabase) {
-      console.warn('Skipping test: Supabase not initialized');
-      return;
-    }
+  it.skipIf(!isSupabaseAvailable)('should reject if non-owner tries to handle request', async () => {
 
     // Attempt to approve as non-owner (would need to mock auth)
     // This test requires proper authentication mocking
     // For now, we'll skip the implementation
   });
 
-  it('should reject if request is not pending', async () => {
-    if (!supabase) {
-      console.warn('Skipping test: Supabase not initialized');
-      return;
-    }
+  it.skipIf(!isSupabaseAvailable)('should reject if request is not pending', async () => {
 
     // First, approve the request
     await fetch('/api/rooms/handle-join-request', {

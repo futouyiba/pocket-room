@@ -38,10 +38,6 @@ export default async function InvitationPage({ params }: PageProps) {
         description,
         join_strategy,
         created_at
-      ),
-      inviter:auth.users!inviter_id(
-        id,
-        email
       )
     `)
     .eq('id', params.id)

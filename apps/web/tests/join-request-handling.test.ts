@@ -11,39 +11,76 @@
  */
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { createClientComponentClient } from '@/lib/supabase/client';
+import { POST } from '@/app/api/rooms/handle-join-request/route';
 
-// Mock Supabase client
-vi.mock('@/lib/supabase/client', () => ({
-  createClientComponentClient: vi.fn(),
+// Create mock functions
+const mockGetUser = vi.fn();
+const mockInsert = vi.fn();
+const mockUpdate = vi.fn();
+const mockSelect = vi.fn();
+const mockEq = vi.fn();
+const mockSingle = vi.fn();
+
+// Mock Supabase server client (not client!)
+vi.mock('@/lib/supabase/server', () => ({
+  createServerComponentClient: vi.fn(() => ({
+    auth: {
+      getUser: mockGetUser,
+    },
+    from: vi.fn((table: string) => {
+      if (table === 'join_requests') {
+        return {
+          select: mockSelect,
+          update: mockUpdate,
+        };
+      }
+      if (table === 'room_members') {
+        return {
+          insert: mockInsert,
+        };
+      }
+      if (table === 'room_blacklist') {
+        return {
+          insert: mockInsert,
+        };
+      }
+      return {};
+    }),
+  })),
+}));
+
+// Mock logger
+vi.mock('@/lib/provider-binding/logger', () => ({
+  createLogger: vi.fn(() => ({
+    info: vi.fn(),
+    warn: vi.fn(),
+    error: vi.fn(),
+    debug: vi.fn(),
+  })),
 }));
 
 describe('Join Request Handling API', () => {
-  let mockSupabase: any;
-
   beforeEach(() => {
-    mockSupabase = {
-      auth: {
-        getUser: vi.fn(),
-      },
-      from: vi.fn(),
-    };
-
-    (createClientComponentClient as any).mockReturnValue(mockSupabase);
+    vi.clearAllMocks();
+    
+    // Setup default mock implementations
+    mockSingle.mockResolvedValue({ data: null, error: null });
+    mockEq.mockReturnValue({ single: mockSingle });
+    mockSelect.mockReturnValue({ eq: mockEq });
+    mockUpdate.mockReturnValue({ eq: mockEq });
+    mockInsert.mockResolvedValue({ data: null, error: null });
   });
 
   describe('POST /api/rooms/handle-join-request', () => {
     it('should approve join request and add user as member', async () => {
       // Mock authenticated user (room owner)
-      mockSupabase.auth.getUser.mockResolvedValue({
+      mockGetUser.mockResolvedValue({
         data: { user: { id: 'owner-id', email: 'owner@example.com' } },
         error: null,
       });
 
       // Mock join request fetch
-      const mockSelect = vi.fn().mockReturnThis();
-      const mockEq = vi.fn().mockReturnThis();
-      const mockSingle = vi.fn().mockResolvedValue({
+      mockSingle.mockResolvedValue({
         data: {
           id: 'request-id',
           room_id: 'room-id',
@@ -58,51 +95,23 @@ describe('Join Request Handling API', () => {
         error: null,
       });
 
-      mockSupabase.from.mockReturnValue({
-        select: mockSelect,
-      });
-      mockSelect.mockReturnValue({
-        eq: mockEq,
-      });
-      mockEq.mockReturnValue({
-        single: mockSingle,
-      });
-
       // Mock member insert
-      const mockInsert = vi.fn().mockResolvedValue({
+      mockInsert.mockResolvedValue({
         data: null,
         error: null,
       });
 
       // Mock request update
-      const mockUpdate = vi.fn().mockReturnThis();
       const mockUpdateEq = vi.fn().mockResolvedValue({
         data: null,
         error: null,
       });
-
-      // Setup mock chain for different operations
-      mockSupabase.from.mockImplementation((table: string) => {
-        if (table === 'join_requests') {
-          return {
-            select: mockSelect,
-            update: mockUpdate,
-          };
-        }
-        if (table === 'room_members') {
-          return {
-            insert: mockInsert,
-          };
-        }
-        return {};
-      });
-
       mockUpdate.mockReturnValue({
         eq: mockUpdateEq,
       });
 
       // Test approve action
-      const response = await fetch('/api/rooms/handle-join-request', {
+      const request = new Request('http://localhost:3000/api/rooms/handle-join-request', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -113,14 +122,29 @@ describe('Join Request Handling API', () => {
         }),
       });
 
-      // Note: This test will fail in the test environment because we're not actually
-      // running a server. In a real integration test, you would:
-      // 1. Start a test server
-      // 2. Make actual HTTP requests
-      // 3. Verify database state changes
+      const response = await POST(request);
+      const data = await response.json();
+
+      // Verify the response
+      expect(response.status).toBe(200);
+      expect(data.success).toBe(true);
       
-      // For unit testing, we should test the handler function directly
-      // This is a placeholder to show the test structure
+      // Verify member was inserted
+      expect(mockInsert).toHaveBeenCalledWith(
+        expect.objectContaining({
+          room_id: 'room-id',
+          user_id: 'applicant-id',
+          role: 'member',
+        })
+      );
+
+      // Verify request was updated
+      expect(mockUpdate).toHaveBeenCalledWith(
+        expect.objectContaining({
+          status: 'approved',
+          handled_by: 'owner-id',
+        })
+      );
     });
 
     it('should reject join request and update status', async () => {

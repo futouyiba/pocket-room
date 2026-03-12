@@ -8,7 +8,7 @@
  * Requirements: 1.1, 1.2, 1.3, 1.4, 1.8
  */
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { 
@@ -21,7 +21,7 @@ import { Mail, Chrome, MessageSquare, Smartphone, AlertCircle, Loader2 } from 'l
 
 type AuthMethod = 'google' | 'email' | 'feishu' | 'wechat'
 
-export default function LoginPage() {
+function LoginForm() {
   const searchParams = useSearchParams()
   const [loading, setLoading] = useState<AuthMethod | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -300,5 +300,20 @@ export default function LoginPage() {
         </p>
       </div>
     </div>
+  )
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100">
+        <div className="text-center">
+          <Loader2 className="w-8 h-8 animate-spin mx-auto text-blue-600" />
+          <p className="mt-4 text-gray-600">Loading...</p>
+        </div>
+      </div>
+    }>
+      <LoginForm />
+    </Suspense>
   )
 }

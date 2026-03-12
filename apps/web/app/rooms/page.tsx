@@ -34,7 +34,17 @@ export default function RoomsPage() {
         .from('rooms')
         .select('id, name, description, join_strategy, status, created_at')
         .eq('status', 'active')
-        .order('created_at', { ascending: false })
+        .order('created_at', { ascending: false }) as { 
+          data: Array<{ 
+            id: string; 
+            name: string; 
+            description: string | null; 
+            join_strategy: 'approval' | 'free' | 'passcode'; 
+            status: 'pending' | 'active' | 'archived'; 
+            created_at: string 
+          }> | null; 
+          error: any 
+        };
 
       if (roomsError) throw roomsError
 
@@ -121,9 +131,14 @@ export default function RoomsPage() {
     <div className="p-8">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Public Rooms</h1>
-        <Button onClick={() => setIsCreateDialogOpen(true)}>
-          创建新 Room
-        </Button>
+        <div className="flex gap-3">
+          <Button variant="outline" onClick={() => window.location.href = '/basket'}>
+            收集篮
+          </Button>
+          <Button onClick={() => setIsCreateDialogOpen(true)}>
+            创建新 Room
+          </Button>
+        </div>
       </div>
 
       {rooms.length === 0 ? (

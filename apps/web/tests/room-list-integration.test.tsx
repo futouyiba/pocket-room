@@ -19,7 +19,13 @@ import RoomsPage from '@/app/rooms/page'
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || 'http://localhost:54321'
 const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'test-anon-key'
 
-describe('Room List Integration', () => {
+// Skip tests if Supabase is not available
+const isSupabaseAvailable = SUPABASE_URL && 
+                             SUPABASE_ANON_KEY &&
+                             SUPABASE_URL !== 'http://localhost:54321' &&
+                             SUPABASE_URL !== 'https://test.supabase.co';
+
+describe.skipIf(!isSupabaseAvailable)('Room List Integration', () => {
   let supabase: ReturnType<typeof createClient>
   let testUserId: string
   let createdRoomIds: string[] = []

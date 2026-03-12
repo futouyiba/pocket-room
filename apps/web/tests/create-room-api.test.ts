@@ -16,11 +16,17 @@ import { NextRequest } from 'next/server';
 // Create mock functions that will be reused
 const mockGetUser = vi.fn();
 const mockListUsers = vi.fn();
-const mockInsert = vi.fn();
-const mockSelect = vi.fn();
-const mockSingle = vi.fn();
-const mockDelete = vi.fn();
-const mockEq = vi.fn();
+
+// Separate mock chains for rooms table
+const roomsMockInsert = vi.fn();
+const roomsMockSelect = vi.fn();
+const roomsMockSingle = vi.fn();
+const roomsMockDelete = vi.fn();
+const roomsMockEq = vi.fn();
+
+// Separate mock chains for invitations table
+const invitationsMockInsert = vi.fn();
+const invitationsMockSelect = vi.fn();
 
 // Mock Supabase
 vi.mock('@/lib/supabase/server', () => ({
@@ -34,19 +40,19 @@ vi.mock('@/lib/supabase/server', () => ({
     from: vi.fn((table: string) => {
       if (table === 'rooms') {
         return {
-          insert: mockInsert,
+          insert: roomsMockInsert,
           delete: () => ({
-            eq: mockEq,
+            eq: roomsMockEq,
           }),
+          select: roomsMockSelect,
         };
       } else if (table === 'invitations') {
         return {
-          insert: mockInsert,
+          insert: invitationsMockInsert,
+          select: invitationsMockSelect,
         };
       }
-      return {
-        insert: mockInsert,
-      };
+      return {};
     }),
   })),
 }));
@@ -65,14 +71,15 @@ describe('Room Creation API', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     
-    // Reset mock implementations
-    mockInsert.mockReturnValue({
-      select: mockSelect,
-    });
-    mockSelect.mockReturnValue({
-      single: mockSingle,
-    });
-    mockEq.mockResolvedValue({ error: null });
+    // Set up rooms table mock chain
+    roomsMockSingle.mockResolvedValue({ data: null, error: null });
+    roomsMockSelect.mockReturnValue({ single: roomsMockSingle });
+    roomsMockInsert.mockReturnValue({ select: roomsMockSelect });
+    roomsMockEq.mockResolvedValue({ error: null });
+    
+    // Set up invitations table mock chain
+    invitationsMockSelect.mockResolvedValue({ data: [], error: null });
+    invitationsMockInsert.mockReturnValue({ select: invitationsMockSelect });
   });
   
   afterEach(() => {
@@ -244,12 +251,12 @@ describe('Room Creation API', () => {
         error: null,
       });
       
-      mockSingle.mockResolvedValue({
+      roomsMockSingle.mockResolvedValue({
         data: mockRoom,
         error: null,
       });
       
-      mockSelect.mockResolvedValue({
+      invitationsMockSelect.mockResolvedValue({
         data: [
           { id: 'inv-1', invitee_id: 'invitee-123', status: 'pending' },
         ],
@@ -272,7 +279,7 @@ describe('Room Creation API', () => {
 
       expect(response.status).toBe(200);
       expect(data.roomId).toBe('room-123');
-      expect(mockInsert).toHaveBeenCalledWith(
+      expect(roomsMockInsert).toHaveBeenCalledWith(
         expect.objectContaining({
           status: 'pending',
           name: 'Test Room',
@@ -304,12 +311,12 @@ describe('Room Creation API', () => {
         error: null,
       });
       
-      mockSingle.mockResolvedValue({
+      roomsMockSingle.mockResolvedValue({
         data: mockRoom,
         error: null,
       });
       
-      mockSelect.mockResolvedValue({
+      invitationsMockSelect.mockResolvedValue({
         data: [
           { id: 'inv-1', invitee_id: 'invitee-123', status: 'pending' },
         ],
@@ -331,7 +338,7 @@ describe('Room Creation API', () => {
       const response = await POST(request);
 
       expect(response.status).toBe(200);
-      expect(mockInsert).toHaveBeenCalledWith(
+      expect(roomsMockInsert).toHaveBeenCalledWith(
         expect.objectContaining({
           passcode_hash: expect.stringMatching(/^\$2[aby]\$\d+\$/), // bcrypt hash pattern
         })
@@ -364,14 +371,12 @@ describe('Room Creation API', () => {
         error: null,
       });
       
-      // First call for room creation
-      mockSingle.mockResolvedValueOnce({
+      roomsMockSingle.mockResolvedValue({
         data: mockRoom,
         error: null,
       });
       
-      // Second call for invitations
-      mockSelect.mockResolvedValueOnce({
+      invitationsMockSelect.mockResolvedValue({
         data: [
           { id: 'inv-1', invitee_id: 'invitee-1', status: 'pending' },
           { id: 'inv-2', invitee_id: 'invitee-2', status: 'pending' },
@@ -395,7 +400,7 @@ describe('Room Creation API', () => {
 
       expect(response.status).toBe(200);
       expect(data.invitations).toHaveLength(2);
-      expect(mockInsert).toHaveBeenCalledWith([
+      expect(invitationsMockInsert).toHaveBeenCalledWith([
         expect.objectContaining({
           room_id: 'room-123',
           inviter_id: 'user-123',
@@ -435,12 +440,12 @@ describe('Room Creation API', () => {
         error: null,
       });
       
-      mockSingle.mockResolvedValueOnce({
+      roomsMockSingle.mockResolvedValue({
         data: mockRoom,
         error: null,
       });
       
-      mockSelect.mockResolvedValueOnce({
+      invitationsMockSelect.mockResolvedValue({
         data: [
           { id: 'inv-1', invitee_id: 'invitee-1', status: 'pending' },
         ],
@@ -485,7 +490,7 @@ describe('Room Creation API', () => {
         error: null,
       });
       
-      mockSingle.mockResolvedValue({
+      roomsMockSingle.mockResolvedValue({
         data: mockRoom,
         error: null,
       });
@@ -506,7 +511,7 @@ describe('Room Creation API', () => {
 
       expect(response.status).toBe(404);
       expect(data.error).toContain('未找到');
-      expect(mockEq).toHaveBeenCalled();
+      expect(roomsMockEq).toHaveBeenCalled();
     });
   });
 
@@ -519,7 +524,7 @@ describe('Room Creation API', () => {
         error: null,
       });
       
-      mockSingle.mockResolvedValue({
+      roomsMockSingle.mockResolvedValue({
         data: null,
         error: new Error('Database error'),
       });

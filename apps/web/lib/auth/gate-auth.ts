@@ -9,12 +9,16 @@
 
 import type { SupabaseClient } from '@supabase/supabase-js'
 import type {
+  Database,
   OAuthProvider,
   OAuthConfig,
   EmailOTPConfig,
   EmailOTPVerifyConfig,
   AuthError,
 } from '../supabase/types'
+
+// Type alias for the Supabase client with Database type
+type TypedSupabaseClient = SupabaseClient<Database, 'public', any>
 
 /**
  * Sign in with OAuth provider (Google, Feishu, WeChat)
@@ -26,12 +30,12 @@ import type {
  * @returns Promise with OAuth URL or error
  */
 export async function signInWithOAuth(
-  supabase: SupabaseClient,
+  supabase: TypedSupabaseClient,
   config: OAuthConfig
 ): Promise<{ url: string | null; error: AuthError | null }> {
   try {
     const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: config.provider,
+      provider: config.provider as any, // Cast to any for custom providers like feishu and wechat
       options: {
         redirectTo: config.redirectTo || `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback`,
         scopes: config.scopes,
@@ -75,7 +79,7 @@ export async function signInWithOAuth(
  * @returns Promise with OAuth URL or error
  */
 export async function signInWithGoogle(
-  supabase: SupabaseClient,
+  supabase: TypedSupabaseClient,
   redirectTo?: string
 ): Promise<{ url: string | null; error: AuthError | null }> {
   return signInWithOAuth(supabase, {
@@ -94,7 +98,7 @@ export async function signInWithGoogle(
  * @returns Promise with OAuth URL or error
  */
 export async function signInWithFeishu(
-  supabase: SupabaseClient,
+  supabase: TypedSupabaseClient,
   redirectTo?: string
 ): Promise<{ url: string | null; error: AuthError | null }> {
   return signInWithOAuth(supabase, {
@@ -113,7 +117,7 @@ export async function signInWithFeishu(
  * @returns Promise with OAuth URL or error
  */
 export async function signInWithWeChat(
-  supabase: SupabaseClient,
+  supabase: TypedSupabaseClient,
   redirectTo?: string
 ): Promise<{ url: string | null; error: AuthError | null }> {
   return signInWithOAuth(supabase, {
@@ -132,7 +136,7 @@ export async function signInWithWeChat(
  * @returns Promise with success status or error
  */
 export async function sendEmailOTP(
-  supabase: SupabaseClient,
+  supabase: TypedSupabaseClient,
   config: EmailOTPConfig
 ): Promise<{ success: boolean; error: AuthError | null }> {
   try {
@@ -181,7 +185,7 @@ export async function sendEmailOTP(
  * @returns Promise with success status or error
  */
 export async function verifyEmailOTP(
-  supabase: SupabaseClient,
+  supabase: TypedSupabaseClient,
   config: EmailOTPVerifyConfig
 ): Promise<{ success: boolean; error: AuthError | null }> {
   try {
@@ -225,7 +229,7 @@ export async function verifyEmailOTP(
  * @returns Promise with success status or error
  */
 export async function signOut(
-  supabase: SupabaseClient
+  supabase: TypedSupabaseClient
 ): Promise<{ success: boolean; error: AuthError | null }> {
   try {
     const { error } = await supabase.auth.signOut()
@@ -265,7 +269,7 @@ export async function signOut(
  * @param supabase - Supabase client instance
  * @returns Promise with session or null
  */
-export async function getSession(supabase: SupabaseClient) {
+export async function getSession(supabase: TypedSupabaseClient) {
   try {
     const { data, error } = await supabase.auth.getSession()
 
@@ -302,7 +306,7 @@ export async function getSession(supabase: SupabaseClient) {
  * @param supabase - Supabase client instance
  * @returns Promise with user or null
  */
-export async function getUser(supabase: SupabaseClient) {
+export async function getUser(supabase: TypedSupabaseClient) {
   try {
     const { data, error } = await supabase.auth.getUser()
 
@@ -341,7 +345,7 @@ export async function getUser(supabase: SupabaseClient) {
  * @param supabase - Supabase client instance
  * @returns Promise with refreshed session or error
  */
-export async function refreshSession(supabase: SupabaseClient) {
+export async function refreshSession(supabase: TypedSupabaseClient) {
   try {
     const { data, error } = await supabase.auth.refreshSession()
 

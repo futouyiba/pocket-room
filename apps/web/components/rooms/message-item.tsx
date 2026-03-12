@@ -5,6 +5,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { useEffect } from 'react';
 import Prism from 'prismjs';
+import SegmentPreview from '@/components/segments/segment-preview';
 
 // Import Prism themes and languages
 import 'prismjs/themes/prism-tomorrow.css';
@@ -27,6 +28,22 @@ interface MessageItemProps {
     isDeleted?: boolean;
     isAi?: boolean;
     familiarName?: string;
+    messageType?: 'text' | 'segment_share' | 'system';
+    sharedSegment?: {
+      id: string;
+      name: string;
+      description?: string;
+      created_by: string;
+      room_id: string;
+      created_at: string;
+      messages?: Array<{
+        id: string;
+        content: string;
+        created_at: string;
+        user_id: string;
+      }>;
+      message_count?: number;
+    };
   };
   isOwn: boolean;
   showAvatar?: boolean;
@@ -89,6 +106,12 @@ export function MessageItem({
         >
           {message.isDeleted ? (
             <span className="text-gray-500 italic">此消息已被删除</span>
+          ) : message.messageType === 'segment_share' && message.sharedSegment ? (
+            // Requirement 12.4: Display segment preview for segment_share messages
+            <div className="space-y-2">
+              <p className="text-gray-700 mb-3">{message.content}</p>
+              <SegmentPreview segment={message.sharedSegment} />
+            </div>
           ) : (
             <div className="prose prose-sm max-w-none">
               <ReactMarkdown
