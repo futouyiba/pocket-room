@@ -53,7 +53,7 @@
 
 ```bash
 # 1. 查看快速指南
-cat QUICK_START_DEPLOYMENT.md
+cat ops/deployment/QUICK_START.md
 
 # 2. 设置数据库
 bash scripts/setup-production-db.sh
@@ -70,7 +70,7 @@ bash scripts/deploy-to-vercel.sh
 
 ```bash
 # 1. 查看完整清单
-cat DEPLOYMENT_CHECKLIST.md
+cat ops/deployment/DEPLOYMENT_CHECKLIST.md
 
 # 2. 逐步执行清单中的所有步骤
 ```
@@ -184,10 +184,10 @@ apps/extension/scripts/build-production.sh  # 扩展构建
 
 ### 文档
 ```
-QUICK_START_DEPLOYMENT.md                # 快速部署指南
-DEPLOYMENT_CHECKLIST.md                  # 完整部署清单
-apps/web/docs/DEPLOYMENT_GUIDE.md        # 详细部署指南
-apps/extension/docs/EXTENSION_PUBLISHING_GUIDE.md  # 扩展发布指南
+ops/deployment/QUICK_START.md            # 快速部署指南
+ops/deployment/DEPLOYMENT_CHECKLIST.md   # 完整部署清单
+../../apps/web/docs/DEPLOYMENT_GUIDE.md  # 详细部署指南
+../../apps/extension/docs/EXTENSION_PUBLISHING_GUIDE.md  # 扩展发布指南
 ```
 
 ---
@@ -195,9 +195,9 @@ apps/extension/docs/EXTENSION_PUBLISHING_GUIDE.md  # 扩展发布指南
 ## 🔗 快速链接
 
 ### 部署相关
-- [快速开始](QUICK_START_DEPLOYMENT.md)
+- [快速开始](QUICK_START.md)
 - [部署清单](DEPLOYMENT_CHECKLIST.md)
-- [部署指南](apps/web/docs/DEPLOYMENT_GUIDE.md)
+- [部署指南](../../apps/web/docs/DEPLOYMENT_GUIDE.md)
 
 ### 文档
 - [用户指南](apps/web/docs/USER_GUIDE.md)
@@ -249,10 +249,10 @@ apps/extension/docs/EXTENSION_PUBLISHING_GUIDE.md  # 扩展发布指南
 # 选择你的部署方式
 
 # 方式 1: 快速部署
-cat QUICK_START_DEPLOYMENT.md
+cat ops/deployment/QUICK_START.md
 
 # 方式 2: 完整部署
-cat DEPLOYMENT_CHECKLIST.md
+cat ops/deployment/DEPLOYMENT_CHECKLIST.md
 
 # 方式 3: 运行自动化脚本
 bash scripts/deploy-to-vercel.sh
@@ -261,8 +261,8 @@ bash scripts/deploy-to-vercel.sh
 ### 获取帮助
 
 如果遇到问题：
-1. 查看 [故障排查指南](apps/web/docs/DEPLOYMENT_GUIDE.md#故障排查)
-2. 查看 [常见问题](QUICK_START_DEPLOYMENT.md#常见问题)
+1. 查看 [故障排查指南](../../apps/web/docs/DEPLOYMENT_GUIDE.md#故障排查)
+2. 查看 [常见问题](QUICK_START.md#常见问题)
 3. 联系支持团队
 
 ---

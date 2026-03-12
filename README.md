@@ -71,3 +71,72 @@ Pocket Room 关心的是：
 - 思考如何被保存
 - 上下文如何被传递
 - 讨论如何不被浪费
+
+---
+
+## 📚 文档
+
+### 用户文档
+- [用户使用指南](apps/web/docs/USER_GUIDE.md) - 如何使用 Pocket Room
+
+### 开发文档
+- [开发者指南](apps/web/docs/DEVELOPER_GUIDE.md) - 开发环境设置和 API 文档
+- [测试文档](apps/web/docs/TESTING_SUMMARY.md) - 测试策略和覆盖率
+
+### 部署文档
+- [快速部署指南](ops/deployment/QUICK_START.md) - 15-30 分钟快速上线
+- [完整部署清单](ops/deployment/DEPLOYMENT_CHECKLIST.md) - 生产环境部署
+- [部署状态报告](ops/deployment/DEPLOYMENT_STATUS.md) - 当前部署准备状态
+- [运维文档索引](ops/README.md) - 所有运维相关文档
+
+### 技术文档
+- [数据库 Schema](docs/db.sql) - 数据库结构
+- [数据库迁移](docs/migrations/) - 数据库版本管理
+
+### 项目管理
+- [项目组织策略](PROJECT_ORGANIZATION.md) - 文档和任务管理策略
+- [Git 提交总结](GIT_COMMIT_SUMMARY.md) - 最新提交记录
+
+---
+
+## 🚀 快速开始
+
+### 开发环境
+
+```bash
+# 安装依赖
+npm install
+
+# 启动开发服务器
+cd apps/web
+npm run dev
+```
+
+### 部署
+
+```bash
+# 查看快速部署指南
+cat ops/deployment/QUICK_START.md
+
+# 或运行自动化部署
+bash scripts/deploy-to-vercel.sh
+```
+
+---
+
+## 🏗️ 技术栈
+
+- **前端**: Next.js 14, React, TypeScript, Tailwind CSS
+- **后端**: Supabase (PostgreSQL + Realtime + Auth + Storage)
+- **部署**: Vercel
+- **浏览器扩展**: Chrome Extension (Manifest V3)
+
+---
+
+## 📄 许可证
+
+[待定]
+
+---
+
+**Pocket Room** - A shared space to think, remember, and build.

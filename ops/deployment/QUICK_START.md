@@ -226,9 +226,9 @@ node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
 
 ## 获取帮助
 
-- 📖 [完整部署指南](apps/web/docs/DEPLOYMENT_GUIDE.md)
+- 📖 [完整部署指南](../../apps/web/docs/DEPLOYMENT_GUIDE.md)
 - 📋 [部署清单](DEPLOYMENT_CHECKLIST.md)
-- 🐛 [故障排查](apps/web/docs/DEPLOYMENT_GUIDE.md#故障排查)
+- 🐛 [故障排查](../../apps/web/docs/DEPLOYMENT_GUIDE.md#故障排查)
 - 💬 联系支持: support@your-domain.com
 
 ---
